@@ -1,8 +1,7 @@
 import React from "react";
+import { MAX_CHAR_LIMIT, MIN_CHAR_LIMIT } from "../constants";
 
-const CreateNote = ({inputText, setInputText, saveHandler}) => {
-    const MAX_CHAR_LIMIT = 300;
-    const MIN_CHAR_LIMIT = 20;
+const CreateNote = ({inputText, inputTextHandler, saveHandler}) => {
     const charCount = MAX_CHAR_LIMIT - inputText.length;
     return (
     <div className="note new_note">
@@ -11,7 +10,7 @@ const CreateNote = ({inputText, setInputText, saveHandler}) => {
         rows={5} 
         placeholder="Type.." 
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={(e) => inputTextHandler(e.target.value)}
         minLength={MIN_CHAR_LIMIT} 
         maxLength={MAX_CHAR_LIMIT}>
         </textarea>
