@@ -1,8 +1,9 @@
-import React from "react"
+import React from "react";
 
 const CreateNote = ({inputText, setInputText, saveHandler}) => {
-    const char = 100;
-    const charLimit = char - inputText.length;
+    const MAX_CHAR_LIMIT = 300;
+    const MIN_CHAR_LIMIT = 10;
+    const charCount = MAX_CHAR_LIMIT - inputText.length;
     return (
     <div className="note">
         <textarea 
@@ -10,16 +11,16 @@ const CreateNote = ({inputText, setInputText, saveHandler}) => {
         rows={5} 
         placeholder="Type.." 
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)} 
-        maxLength={100}>
-
+        onChange={(e) => setInputText(e.target.value)}
+        minLength={MIN_CHAR_LIMIT} 
+        maxLength={MAX_CHAR_LIMIT}>
         </textarea>
         <div className="note_footer">
-            <span className="label">{charLimit} left</span>
+            <span className="label">{charCount} left</span>
             <button className="note_button" onClick={saveHandler}>Save</button>
         </div>
     </div>
-  )
+  );
 }
 
 export default CreateNote

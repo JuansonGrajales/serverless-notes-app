@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import React from 'react'
-import CreateNote from './createnote'
-import './notes.css'
-import {v4 as uuid} from 'uuid'
-import Note from './note'
+import { useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import React from 'react';
+import CreateNote from './createnote';
+import Note from './note';
+import './notes.css';
 
 
 const Notes = () => {
@@ -33,7 +33,6 @@ const Notes = () => {
         setInputText("");
         setEditToggle(null);
     }
-
     const deleteHandler = (id) => {
         setNotes(notes.filter((note) => note.id !== id));
     }
@@ -47,7 +46,8 @@ const Notes = () => {
     
     useEffect(() => {
         window.localStorage.setItem("Notes", JSON.stringify(notes));
-    }, [notes])
+    }, [notes]);
+    
     return (
     <div className='notes'>
         {
@@ -78,7 +78,7 @@ const Notes = () => {
             : <></>
         }
     </div>
-  )
+  );
 }
 
 export default Notes

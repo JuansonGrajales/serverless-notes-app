@@ -1,6 +1,6 @@
-import './App.css'
-import Header from './components/header'
-import Notes from './components/notes'
+import './App.css';
+import Header from './components/header';
+import Notes from './components/notes';
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
       <Header/>
       <Notes/>
     </div>
-  )
+  );
 }
 
 export default App
