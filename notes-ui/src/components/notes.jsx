@@ -1,65 +1,26 @@
-import { useEffect, useState } from 'react';
-import { v4 as uuid } from 'uuid';
 import React from 'react';
 import CreateNote from './createnote';
 import Note from './note';
 import './notes.css';
 
 
-const Notes = () => {
-    const [inputText, setInputText] = useState("");
-    const [notes, setNotes] = useState([]);
-    const [editToggle, setEditToggle] = useState(null);
-
-    const editHandler = (id, text) => {
-        setEditToggle(id);
-        setInputText(text);
-    }
-    const saveHandler = () => {
-        if (editToggle) {
-            setNotes(notes.map((note) => (
-                note.id === editToggle ? 
-                {...note, text: inputText} : note
-            )));
-        } else {
-            setNotes((prevNotes) => [
-                ...prevNotes, {
-                    id: uuid(),
-                    text: inputText,
-                }
-            ]);
-        }
-        
-        setInputText("");
-        setEditToggle(null);
-    }
-    const deleteHandler = (id) => {
-        setNotes(notes.filter((note) => note.id !== id));
-    }
-    
-    useEffect(() => {
-        const data = JSON.parse(localStorage.getItem("Notes"));
-        if (data) {
-            setNotes(data);
-        }
-    }, []);
-    
-    useEffect(() => {
-        window.localStorage.setItem("Notes", JSON.stringify(notes));
-    }, [notes]);
-    
+const Notes = ({notes, saveHandler, deleteHandler, inputText, inputTextHandler, editingNoteId, editHandler, searchText}) => {
+    // filter notes based on searchText
+    const filteredNotes = notes.filter((note) => note.text.toLowerCase().includes(searchText.toLowerCase()));
     return (
     <div className='notes'>
         {
-            notes.map((note) => (
-                editToggle === note.id ?
-                <CreateNote 
+            filteredNotes.map((note) => (
+                editingNoteId === note.id ?
+                <CreateNote
+                key={`edit-${note.id}`} // unique key for editing note
                 inputText={inputText}
-                setInputText={setInputText}
+                inputTextHandler={inputTextHandler}
                 saveHandler={saveHandler}
                 />
                 :
-                <Note 
+                <Note
+                    key={note.id} 
                     id={note.id} 
                     text={note.text}
                     editHandler={editHandler}
@@ -68,10 +29,13 @@ const Notes = () => {
             ))
         }
         {
-            editToggle === null ?
+            // Render CreateNote onli if editToggle is null and searchText is empty
+            // This ensures CreateNote is not displayed when user is searching for a note
+            editingNoteId === null && searchText === ''  ?
             <CreateNote 
+            key="new-note" // Unique key for new note
             inputText={inputText}
-            setInputText={setInputText}
+            inputTextHandler={inputTextHandler}
             saveHandler={saveHandler}
             />
             : <></>
