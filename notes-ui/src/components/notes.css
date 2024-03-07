@@ -11,6 +11,11 @@
     flex-direction: column;
     justify-content: space-between;
     word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.note.new_note {
+    background-color: #0aa898;
 }
 
 .note_footer {
@@ -21,7 +26,6 @@
 }
 
 .note textarea {
-    white-space: pre-wrap;
     background: transparent;
     border: none;
     color: #fff;

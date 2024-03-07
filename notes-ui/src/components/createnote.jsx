@@ -2,10 +2,10 @@ import React from "react";
 
 const CreateNote = ({inputText, setInputText, saveHandler}) => {
     const MAX_CHAR_LIMIT = 300;
-    const MIN_CHAR_LIMIT = 10;
+    const MIN_CHAR_LIMIT = 20;
     const charCount = MAX_CHAR_LIMIT - inputText.length;
     return (
-    <div className="note">
+    <div className="note new_note">
         <textarea 
         cols={10} 
         rows={5} 

@@ -60,7 +60,6 @@ const Notes = () => {
                 />
                 :
                 <Note 
-                    key={note.id} 
                     id={note.id} 
                     text={note.text}
                     editHandler={editHandler}
