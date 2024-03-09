@@ -4,14 +4,14 @@ const typeDefs = gql`
     type Note {
         id: ID!
         content: String!
+        content_search: String!
         createdAt: String!
-        updatedAt: String!
     }
 
     type Query {
         getNote(id: ID!): Note!
         getNotes(limit: Int, offset: Int): [Note!]!
-        searchNotes(query: String!, limit: Int, offset: Int): [Note!]!
+        searchNotes(searchContent: String!, limit: Int, offset: Int): [Note!]!
     }
 
     type NoteResponse {
@@ -30,7 +30,6 @@ const typeDefs = gql`
         createNote(content: String!): NoteResponse!
         updateNote(id: ID!, content: String!): NoteResponse!
         deleteNote(id: ID!): NoteResponse!
-        deleteAllNotes: NoteResponse!
     }
 `;
 module.exports = typeDefs;

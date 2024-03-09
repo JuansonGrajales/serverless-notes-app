@@ -2,12 +2,17 @@ service: notes-app-api
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs16.x
   region: us-east-1
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:*
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:Scan
+        - dynamodb:Query
       Resource: "arn:aws:dynamodb:us-east-1:*:table/NotesTable"
 
 functions:
