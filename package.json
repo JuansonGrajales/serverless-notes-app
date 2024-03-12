@@ -7,7 +7,7 @@
     "install:backend": "cd notes-api && npm install",
     "install:all": "npm run install:frontend && npm run install:backend",
     "deploy": "cd notes-api && serverless deploy",
-    "dev": "cd notes-ui && vite"
+    "dev": "cd notes-ui && npx vite"
   },
   "license": "ISC"
 }
