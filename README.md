@@ -26,7 +26,7 @@ The Serverless Notes App is an app developed using React and AWS serverless tech
 ## Installation
 
 1. Clone the repos: `git clone https://github.com/JuansonGrajales/serverless-notes-app.git`
-2. Navigate to the project directory: `cd your-repo`
+2. Navigate to the project directory: `cd serverless-notes-app`
 3. Install the FrontEnd and BackEnd dependencies: `npm run install:all`
 
 ## Set Your AWS Environment
@@ -36,13 +36,15 @@ Before deploying anything, ensure your AWS environment is set up correctly. This
 - Setting up AWS CLI and configuring it with your credentials
 
 ## Serverless Framework
-Ensure you have Serverless Framework installed and run `npm run deploy`
+Ensure you have Serverless Framework installed and run `npm run deploy` on the main directory or you can cd to notes-api and run `serverless deploy`. If successfully deployed, copy the graphql endpoint and save it for the next section.
 
 ## Env Variables
 Create a `.env` folder under the notes-ui and copy AWS API-Gateways endpoint. Assign the endpoint with this name `VITE_GRAPHQL_URI`.
 e.g. `VITE_GRAPHQL_URI=https://gateway.execute-api.region.amazonaws.com/dev/graphql` 
 For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-and-mode)
 
+## Run locally
+- After successfully completing the setup, you may run the project locally from the main directory by running the command `npm run dev` or you may go to the notes-ui directory and run the same command.
 
 ## Arch Decisions
 ### Generating IDs in the API (GraphQL Resolver) 
