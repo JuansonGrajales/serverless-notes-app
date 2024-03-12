@@ -50,6 +50,8 @@ For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-an
 
 **con:** The ID is only known after the server processes the request, which might introduce slight delays in the UI.
 
+## Clean Env
+If you want to delete your service, go to **notes-api** and run `serverless remove`. This will delete all the AWS resources created by the project and ensure that you don't incur any unexpected charges. It will also remove the service from Serverless Dashboard.
 
 
 
