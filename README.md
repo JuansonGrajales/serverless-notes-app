@@ -10,6 +10,7 @@ The Serverless Notes App is an app developed using React and AWS serverless tech
 ## Tech Stack
 
 - React
+- (Vite)[https://vitejs.dev/guide/why.html]
 - GraphQL Apollo
 - AWS Lambda
 - AWS Gateway
