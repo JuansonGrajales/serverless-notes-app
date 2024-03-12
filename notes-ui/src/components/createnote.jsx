@@ -3,7 +3,7 @@ import { MAX_CHAR_LIMIT, MIN_CHAR_LIMIT } from "../constants";
 import { useCreateNote } from "../hooks/useCreateNote";
 import { useUpdateNote } from "../hooks/useUpdateNote";
 
-const CreateNote = ({id, inputText, inputTextHandler, editHandler}) => {
+const CreateNote = ({inputText, inputTextHandler, editHandler, id}) => {
     const { createNote, loading, error } = useCreateNote();
     const { updateNote, updateloading, updateError } = useUpdateNote();
     const charCount = MAX_CHAR_LIMIT - inputText?.length;
@@ -16,17 +16,15 @@ const CreateNote = ({id, inputText, inputTextHandler, editHandler}) => {
         try {
             if (id) { // update exisiting notes
                 await updateNote(id, inputText);
+                editHandler(null);
             } else { // create new note
                 await createNote(inputText);
             }
-            // Reset inputText and edit id after saving
+            // Reset inputText for edit and create
             inputTextHandler('');
-            editHandler(null);
         } catch (err) {
             console.error("Error creating note: ", err);
             // Handle error feedback, possibly with a more user-friendly notification
-        } finally {
-            
         }
     };
     

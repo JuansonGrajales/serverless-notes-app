@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreateNote from './createnote';
 import Note from './note';
 import './notes.css';
 
 
-const Notes = ({notes, deleteHandler, inputText, inputTextHandler, editingNoteId, editHandler, searchText}) => {
+const Notes = ({notes, inputText, inputTextHandler, editingNoteId, editHandler, searchText}) => {
     // filter notes based on searchText
     const filteredNotes = notes.filter((note) => note.content.toLowerCase().includes(searchText.toLowerCase()));
     return (
@@ -14,11 +14,10 @@ const Notes = ({notes, deleteHandler, inputText, inputTextHandler, editingNoteId
                 editingNoteId === note.id ?
                 <CreateNote
                 key={`edit-${note.id}`} // unique key for editing note
-                id={note.id}
                 inputText={inputText}
                 inputTextHandler={inputTextHandler}
                 editHandler={editHandler}
-                // saveHandler={saveHandler}
+                id={note.id}
                 />
                 :
                 <Note
@@ -26,7 +25,6 @@ const Notes = ({notes, deleteHandler, inputText, inputTextHandler, editingNoteId
                     id={note.id} 
                     text={note.content}
                     editHandler={editHandler}
-                    deleteHandler={deleteHandler}
                     >
                 </Note>
             ))
@@ -39,8 +37,6 @@ const Notes = ({notes, deleteHandler, inputText, inputTextHandler, editingNoteId
             key="new-note" // Unique key for new note
             inputText={inputText}
             inputTextHandler={inputTextHandler}
-            editHandler={editHandler}
-            // saveHandler={saveHandler}
             />
             : <></>
         }

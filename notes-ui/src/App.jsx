@@ -14,21 +14,6 @@ function App() {
   
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>
-  
-  // Callback that resets UI state, passed to the useNotes hook
-  // const noteSavedHandler = () => {
-  //   setEditingNoteId(null);
-  //   setInputText("");
-  // }
-
-  // save or update note
-  // const saveHandler = () => { 
-  //   saveNote(editingNoteId, inputText);
-  // }
-
-  const deleteNote = (id) => {
-    // setNotes(prev => prev.filter(note => note.id !== id));
-  };
 
   // edit note
   const editHandler = (id, text) => {
@@ -52,8 +37,6 @@ function App() {
       <Search searchHandler={searchHandler}/>
       <Notes 
         notes={notes}
-        // saveHandler={saveHandler}
-        deleteHandler={deleteNote}
         inputText={inputText}
         inputTextHandler={inputTextHandler} 
         editingNoteId={editingNoteId}
