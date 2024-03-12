@@ -1,0 +1,13 @@
+{
+  "name": "serverless-notes-app",
+  "version": "1.0.0",
+  "description": "The Serverless Notes App is an app developed using React and AWS serverless technologies. It allows users to create, read, update, and delete notes. The application leverages AWS Lambda, API Gateway, and DynamoDB for serverless backend logic and data storage.",
+  "scripts": {
+    "install:frontend": "cd notes-ui && npm install",
+    "install:backend": "cd notes-api && npm install",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "deploy": "cd notes-api && serverless deploy",
+    "dev": "cd notes-ui && vite"
+  },
+  "license": "ISC"
+}

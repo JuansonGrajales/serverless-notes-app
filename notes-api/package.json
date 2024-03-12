@@ -13,5 +13,8 @@
     "apollo-server-lambda": "^3.13.0",
     "aws-sdk": "^2.1574.0",
     "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0"
   }
 }
