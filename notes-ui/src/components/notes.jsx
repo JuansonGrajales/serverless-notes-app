@@ -14,6 +14,7 @@ const Notes = ({notes, deleteHandler, inputText, inputTextHandler, editingNoteId
                 editingNoteId === note.id ?
                 <CreateNote
                 key={`edit-${note.id}`} // unique key for editing note
+                id={note.id}
                 inputText={inputText}
                 inputTextHandler={inputTextHandler}
                 editHandler={editHandler}
@@ -38,6 +39,7 @@ const Notes = ({notes, deleteHandler, inputText, inputTextHandler, editingNoteId
             key="new-note" // Unique key for new note
             inputText={inputText}
             inputTextHandler={inputTextHandler}
+            editHandler={editHandler}
             // saveHandler={saveHandler}
             />
             : <></>

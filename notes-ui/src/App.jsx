@@ -11,7 +11,7 @@ function App() {
   const [editingNoteId, setEditingNoteId] = useState(null);
   const [inputText, setInputText] = useState("");  
   const { notes, loading, error } = useNotes(GET_NOTES);
-
+  
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>
   

@@ -1,10 +1,12 @@
 import React from "react";
 import { MAX_CHAR_LIMIT, MIN_CHAR_LIMIT } from "../constants";
 import { useCreateNote } from "../hooks/useCreateNote";
+import { useUpdateNote } from "../hooks/useUpdateNote";
 
-const CreateNote = ({inputText, inputTextHandler, editHandler}) => {
+const CreateNote = ({id, inputText, inputTextHandler, editHandler}) => {
     const { createNote, loading, error } = useCreateNote();
-    const charCount = MAX_CHAR_LIMIT - inputText.length;
+    const { updateNote, updateloading, updateError } = useUpdateNote();
+    const charCount = MAX_CHAR_LIMIT - inputText?.length;
     
     const saveHandler = async () => {
         if (!inputText.trim() || inputText.length < MIN_CHAR_LIMIT) {
@@ -12,13 +14,19 @@ const CreateNote = ({inputText, inputTextHandler, editHandler}) => {
             return
         }
         try {
-            await createNote(inputText);
+            if (id) { // update exisiting notes
+                await updateNote(id, inputText);
+            } else { // create new note
+                await createNote(inputText);
+            }
             // Reset inputText and edit id after saving
             inputTextHandler('');
             editHandler(null);
         } catch (err) {
             console.error("Error creating note: ", err);
             // Handle error feedback, possibly with a more user-friendly notification
+        } finally {
+            
         }
     };
     
@@ -35,7 +43,6 @@ const CreateNote = ({inputText, inputTextHandler, editHandler}) => {
         </textarea>
         <div className="note_footer">
             <span className="label">{charCount} left</span>
-            {/* TODO add a second button if the note Id exist to call the update function */}
             <button className="note_button" onClick={saveHandler}>Save</button>
         </div>
         {loading && <p>Saving...</p>}
