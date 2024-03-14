@@ -30,6 +30,7 @@ functions:
 
 resources:
   Resources:
+  # DynamoDB table to store item: {id: <ID>, content: <CONTENT>}
     NotesTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -41,3 +42,72 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+    # S3 Bucket to host static website
+    WebsiteBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        # AWS CloudFormation generates a random 12-character string and uses it as the bucket name
+        # BucketName: notes-app-api-website-bucket
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
+        WebsiteConfiguration:
+          IndexDocument: index.html
+    # Bucket policy to make sure all files inside the Bucket are available to CloudFront
+    WebsiteBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: WebsiteBucket
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action: 
+              - s3:GetObject
+              Resource:
+                Fn::Join:
+                  - ""
+                  - - "arn:aws:s3:::"
+                    - Ref: WebsiteBucket
+                    - "/*"
+    # CloudFront distribution to server the website
+    WebsiteDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Enabled: true
+          Origins:
+            - DomainName:
+                Fn::GetAtt:
+                  - WebsiteBucket
+                  - RegionalDomainName
+              Id: WebsiteBucketOrigin
+              CustomOriginConfig:
+                OriginProtocolPolicy: http-only
+          DefaultRootObject: index.html
+          DefaultCacheBehavior:
+            TargetOriginId: WebsiteBucketOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: true
+
+  Outputs:
+    WebsiteURL:
+      Value:
+        Fn::GetAtt:
+          - WebsiteDistribution
+          - DomainName
+      Description: URL for website hosted on S3
+    S3BucketName:
+      Value:
+        Ref: WebsiteBucket
+      Description: S3 bucket name
+  
