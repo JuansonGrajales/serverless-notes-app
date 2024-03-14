@@ -1,7 +1,7 @@
 # Serverless Notes App
 
 ## Description
-The Serverless Notes App is an app developed using React and AWS serverless technologies. It allows users to create, read, update, and delete notes. The application leverages AWS Lambda, API Gateway, and DynamoDB for serverless backend logic and data storage.
+The Serverless Notes App is an app developed using React and AWS serverless technologies. It allows users to create, read, update, and delete notes. The application leverages AWS Lambda, API Gateway, and DynamoDB for serverless backend logic and AWS S3 and CloudFront to host and deliver content.
 
 ## Features
 
@@ -31,61 +31,20 @@ After successfully completing the setup, you may run the project locally from th
 `npm run dev` 
 ### Run on the Web
 ---
-#### SET THE BUCKET AS PUBLIC
-Serverless Framework created a bucket.
-Go to the AWS Console
-Ensure the region is set to `US East (N.Virginia) us-east-1`  
-Scroll Down and **UNTICK** `Block all public access`  
-Tick the box under `Turning off block all public access might result in this bucket and the objects within becoming public` to acknowledge you understand that you can make the bucket public. 
-The next step is to make it publicly accessible by adding this policy
-Go into the bucket you just created.  
-Click the `Permissions` tab.  
-Scroll down and in the `Bucket Policy` area, click `Edit`.
-in the box, paste the code below
-```
-{
-    "Version":"2012-10-17",
-    "Statement":[
-      {
-        "Sid":"PublicRead",
-        "Effect":"Allow",
-        "Principal": "*",
-        "Action":["s3:GetObject"],
-        "Resource":["REPLACEME_BUCKET_ARN/*"]
-      }
-    ]
-  }
-
-```
-Replace the `REPLACEME_BUCKET_ARN` (being careful NOT to include the `/*`) with the bucket ARN, which you can see near to `Bucket ARN `
-Click `Save Changes` 
-
-#### ENABLE STATIC HOSTING
-Serverless Framework shoul have already enabled static hosting. However if you need to enable static hosting on the S3 bucket:
-Click on the `Properties Tab`  
-Scroll down and locate `Static website hosting`  
-Click `Edit`  
-Select `Enable` 
-Select `Host a static website`  
-For both `Index Document` and `Error Document` enter `index.html` 
-Click `Save Changes`  
-Scroll down and locate `Static website hosting` again.  
-Under `Bucket Website Endpoint` copy and note down the bucket endpoint URL.
-
 #### BUILDING THE REACT APP
 ```sh
 cd notes-ui
 npm run build
 ```
 #### UPLOADING FILES TO S3
-Return to the S3 console
+GO to the S3 console
 Click on the `Objects` Tab.  
 Click `Upload`  
 Drag the 2 files from the `/dist` folder onto this tab and Drag the 1 folder on this bucket
 
 Click `Upload` and wait for it to complete.  
 Click `Exit`  
-Verify All 2 files and 1 folder are in the `Objects` area of the bucket.
+Verify All 2 files (index.html, vite.svg) and 1 folder (assets) are in the `Objects` area of the bucket.
 
 #### TEST
 Go to CloudFront and copy the Distribution domain name.
@@ -120,10 +79,13 @@ For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-an
 - [AWS Lambda](https://aws.amazon.com/lambda/)
 - [AWS Gateway](https://aws.amazon.com/api-gateway/)
 - [AWS DynamoDB](https://aws.amazon.com/dynamodb/)
+- [AWS S3](https://aws.amazon.com/s3/)
+- [AWS CloudFront](https://aws.amazon.com/cloudfront/)
 - [Serverless Framework](https://www.serverless.com/)
 
 ## Clean Env
-If you want to delete your service, go to **notes-api** and run `serverless remove`. This will delete all the AWS resources created by the project and ensure that you don't incur any unexpected charges. It will also remove the service from Serverless Dashboard.
+1. Go to the S3 console and remove all the objects inside the bucket
+2. If you want to delete your service, go to **notes-api** and run `serverless remove`. This will delete all the AWS resources created by the project and ensure that you don't incur any unexpected charges. It will also remove the service from Serverless Dashboard.
 
 
 
