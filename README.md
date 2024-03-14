@@ -67,7 +67,7 @@ For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-an
 ### Serverless Framework
 **pro:** Fast and easy to setup the backend infrastracture with Lambda, API Gateway, and DynamoDB.
 
-**con:** Once the app started to expand to include it host it on an S3 bucket and CloudFront, serverless framework start to show limitation. May consider switching to terraform. 
+**con:** Once the app starts to expand to include more features, may consider switching to terraform. 
 
 ## Tech Stack
 
