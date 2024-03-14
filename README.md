@@ -1,36 +1,41 @@
 # Serverless Notes App
 
 ## Description
-The Serverless Notes App is an app developed using React and AWS serverless technologies. It allows users to create, read, update, and delete notes. The application leverages AWS Lambda, API Gateway, and DynamoDB for serverless backend logic and AWS S3 and CloudFront to host and deliver content.
+The Serverless Notes App is a dynamic application built with React and AWS serverless technologies, designed for note-taking with functionalities to create, read, update, and delete notes. It leverages AWS Lambda, API Gateway, and DynamoDB for backend logic, and AWS S3 and CloudFront for content hosting and delivery.
 
 ## Features
 
-- Create, read, update, and delete notes
-- Valid notes must be longer than 20 characters and shorther than 300 characters
-- Main page includes all the notes created
-- Search bar that will find the notes based on the notes content
+- CRUD operations: Create, Read, Update, and Delete notes.
+- Note validation: Notes must be longer than 20 characters and shorter than 300 characters.
+- Notes listing: Main page lists all created notes.
+- Search functionality: Users can search for notes based on their content.
 
-## Set Your AWS Environment
 
-Before deploying anything, ensure your AWS environment is set up correctly. This includes:
-- Creating an AWS account
-- Setting up AWS CLI and configuring it with your credentials
+## AWS Environment Setup
+
+Before deployment, set up your AWS environment:
+- Create an [AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/).
+- Install and configure [AWS CLI](https://aws.amazon.com/cli/) with your credentials.
 
 ## Installation and Configuration
 
 1. Clone the repos: `git clone https://github.com/JuansonGrajales/serverless-notes-app.git`
 2. Navigate to the project directory: `cd serverless-notes-app`
-3. Install the FrontEnd and BackEnd dependencies: `npm run install:all`
-4. Deploy Serverless Framework: `npm run deploy`
-5. Copy the graphql endpoint provided by serverless output
-6. `cd notes-ui` and create a `.env` file with this name `VITE_GRAPHQL_URI` and assign the endpoint to that value e.g.`VITE_GRAPHQL_URI=https://gateway.execute-api.region.amazonaws.com/dev/graphql`
+3. Install dependencies for both Frontend and Backend: `npm run install:all`
+4. Deploy with Serverless Framework: `npm run deploy`
+5. After deployment, copy the GraphQL endpoint provided by the Serverless output.
 
-### Run locally
----
-After successfully completing the setup, you may run the project locally from the main directory by running the command or you may go to the notes-ui directory and run the same command.
-`npm run dev` 
-### Run on the Web
----
+### Configure Frontend
+6. Navigate to the frontend directory: `cd notes-ui`
+7. Create a `.env` file and add the GraphQL endpoint: e.g.`VITE_GRAPHQL_URI=https://gateway.execute-api.region.amazonaws.com/dev/graphql`
+
+### Run Locally
+To run the project locally, execute the following command in the main directory or within `notes-ui`:
+```sh
+npm run dev
+``` 
+### Deploying to the Web
+
 #### BUILDING THE REACT APP
 ```sh
 cd notes-ui
@@ -46,28 +51,43 @@ Click `Upload` and wait for it to complete.
 Click `Exit`  
 Verify All 2 files (index.html, vite.svg) and 1 folder (assets) are in the `Objects` area of the bucket.
 
-#### TEST
+#### TESTING THE DEPLOYMENT
 Go to CloudFront and copy the Distribution domain name.
-Past the domain in the url and once you hit enter you should see the serverless note app appear.
+Paste the domain in your browser's address bar. The Serverless Notes App should load.
 
-## Serverless Framework
-Ensure you have Serverless Framework is installed and run `npm run deploy` on the main directory or you can cd to notes-api and run `serverless deploy`. If successfully deployed, copy the graphql endpoint and save it for the next section.
+## Using Serverless Framework
+Ensure the Serverless Framework is installed. Deploy the backend from the main directory or notes-api using:
+```sh
+serverless deploy
+```
+Copy the GraphQL endpoint for frontend configuration as described above.
 
 ## Env Variables
-Create a `.env` folder under the notes-ui and copy AWS API-Gateways endpoint. Assign the endpoint with this name `VITE_GRAPHQL_URI`.
+Under notes-ui, create a .env file and add your AWS API Gateway endpoint:
 e.g. `VITE_GRAPHQL_URI=https://gateway.execute-api.region.amazonaws.com/dev/graphql` 
+
 For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-and-mode)
 
 ## Arch Decisions
 ### Generating IDs in the API (GraphQL Resolver) 
-**pro:** Lean on the UUID library in Node.js to ensure uniquness.
+**pro:** Leverages the UUID library in Node.js to ensure uniqueness.
 
-**con:** The ID is only known after the server processes the request, which might introduce slight delays in the UI.
+**con:** The ID is known only after server processing, potentially introducing UI delays.
+
+### NoSql vs Sql
+Prioritized on performance and high availability. We can scale the DynamoDB table's capacity up or down and it is another serverless service fully managed by AWS.
+
+### Caching
+Implementing caching strategies that leverage Apollo Client's in-memory cache following mutations on DynamoDB.
+
+**pro:** Immediate UI updates and reducing network traffic.
+
+**con:** Overhead of manual cache updates and complexity in cache management as the application grows.
 
 ### Serverless Framework
-**pro:** Fast and easy to setup the backend infrastracture with Lambda, API Gateway, and DynamoDB.
+**pro:** Quick setup of backend infrastructure with Lambda, API Gateway, and DynamoDB.
 
-**con:** Once the app started to expand to include it host it on an S3 bucket and CloudFront, serverless framework start to show limitation. May consider switching to terraform. 
+**con:** May require migration to Terraform for expanded features and complex infrastructures. 
 
 ## Tech Stack
 
@@ -84,8 +104,12 @@ For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-an
 - [Serverless Framework](https://www.serverless.com/)
 
 ## Clean Env
-1. Go to the S3 console and remove all the objects inside the bucket
-2. If you want to delete your service, go to **notes-api** and run `serverless remove`. This will delete all the AWS resources created by the project and ensure that you don't incur any unexpected charges. It will also remove the service from Serverless Dashboard.
+1. If deployed to the web, go to the S3 console and remove all the objects inside the bucket
+2. To remove the deployed service and avoid unexpected charges, navigate to notes-api and run:
+```sh
+serverless remove
+```
+This command deletes all AWS resources created by the project.
 
 
 
