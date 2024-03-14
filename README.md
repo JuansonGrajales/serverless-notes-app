@@ -26,23 +26,22 @@ Before deploying anything, ensure your AWS environment is set up correctly. This
 6. `cd notes-ui` and create a `.env` file with this name `VITE_GRAPHQL_URI` and assign the endpoint to that value e.g.`VITE_GRAPHQL_URI=https://gateway.execute-api.region.amazonaws.com/dev/graphql`
 
 ### Run locally
-- After successfully completing the setup, you may run the project locally from the main directory by running the command `npm run dev` or you may go to the notes-ui directory and run the same command.
-
+---
+After successfully completing the setup, you may run the project locally from the main directory by running the command or you may go to the notes-ui directory and run the same command.
+`npm run dev` 
 ### Run on the Web
-- SET THE BUCKET AS PUBLIC
+---
+#### SET THE BUCKET AS PUBLIC
 Serverless Framework created a bucket.
 Go to the AWS Console
 Ensure the region is set to `US East (N.Virginia) us-east-1`  
 Scroll Down and **UNTICK** `Block all public access`  
 Tick the box under `Turning off block all public access might result in this bucket and the objects within becoming public` to acknowledge you understand that you can make the bucket public. 
-
 The next step is to make it publicly accessible by adding this policy
 Go into the bucket you just created.  
 Click the `Permissions` tab.  
-Scroll down and in the `Bucket Policy` area, click `Edit`. 
-
+Scroll down and in the `Bucket Policy` area, click `Edit`.
 in the box, paste the code below
-
 ```
 {
     "Version":"2012-10-17",
@@ -61,7 +60,7 @@ in the box, paste the code below
 Replace the `REPLACEME_BUCKET_ARN` (being careful NOT to include the `/*`) with the bucket ARN, which you can see near to `Bucket ARN `
 Click `Save Changes` 
 
-- ENABLE STATIC HOSTING
+#### ENABLE STATIC HOSTING
 Serverless Framework shoul have already enabled static hosting. However if you need to enable static hosting on the S3 bucket:
 Click on the `Properties Tab`  
 Scroll down and locate `Static website hosting`  
@@ -73,12 +72,12 @@ Click `Save Changes`
 Scroll down and locate `Static website hosting` again.  
 Under `Bucket Website Endpoint` copy and note down the bucket endpoint URL.
 
-- BUILDING THE REACT APP
+#### BUILDING THE REACT APP
 ```sh
 cd notes-ui
 npm run build
 ```
--UPLOADING FILES TO S3
+#### UPLOADING FILES TO S3
 Return to the S3 console
 Click on the `Objects` Tab.  
 Click `Upload`  
@@ -88,7 +87,7 @@ Click `Upload` and wait for it to complete.
 Click `Exit`  
 Verify All 2 files and 1 folder are in the `Objects` area of the bucket.
 
-- TEST
+#### TEST
 Go to CloudFront and copy the Distribution domain name.
 Past the domain in the url and once you hit enter you should see the serverless note app appear.
 
@@ -100,14 +99,16 @@ Create a `.env` folder under the notes-ui and copy AWS API-Gateways endpoint. As
 e.g. `VITE_GRAPHQL_URI=https://gateway.execute-api.region.amazonaws.com/dev/graphql` 
 For additional resource checkout [Vite Env vars](https://vitejs.dev/guide/env-and-mode)
 
-## Run locally
-- After successfully completing the setup, you may run the project locally from the main directory by running the command `npm run dev` or you may go to the notes-ui directory and run the same command.
-
 ## Arch Decisions
 ### Generating IDs in the API (GraphQL Resolver) 
 **pro:** Lean on the UUID library in Node.js to ensure uniquness.
 
 **con:** The ID is only known after the server processes the request, which might introduce slight delays in the UI.
+
+### Serverless Framework
+**pro:** Fast and easy to setup the backend infrastracture with Lambda, API Gateway, and DynamoDB.
+
+**con:** Once the app started to expand to include it host it on an S3 bucket and CloudFront, serverless framework start to show limitation. May consider switching to terraform. 
 
 ## Tech Stack
 
