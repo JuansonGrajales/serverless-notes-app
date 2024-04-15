@@ -4,7 +4,11 @@ import Search from './components/search';
 import Notes from './components/notes';
 import { useState } from 'react';
 import { useNotes, GET_NOTES } from './hooks/useNotes';
-
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { Amplify } from 'aws-amplify';
+import config from './amplifyconfiguration.json';
+Amplify.configure(config);
 
 function App() {
   const [searchText, setSearchText] = useState("");
@@ -46,4 +50,4 @@ function App() {
   );
 }
 
-export default App
+export default withAuthenticator(App);
