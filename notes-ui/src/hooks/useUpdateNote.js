@@ -6,6 +6,7 @@ const UPDATE_NOTE = gql`
         updateNote(id: $id, content: $content) {
             note {
                 id
+                userId
                 content
             }
             success
@@ -18,13 +19,19 @@ export const useUpdateNote = () => {
     const [ updateNoteMutation,  {loading, error} ] = useMutation(UPDATE_NOTE, {
         update: (cache, { data: { updateNote } }) => {
             try {
-                const existingNotesData = cache.readQuery({ query: GET_NOTES });
+                const existingNotesData = cache.readQuery({ 
+                    query: GET_NOTES,
+                    variables: { userId: updateNote.note.userId }
+                 });
                 if (existingNotesData && updateNote.note) {
                     const notes = existingNotesData.getNotes.filter(note => note.id !== updateNote.note.id);
                     const updatedNotes = [...notes, updateNote.note];
                     cache.writeQuery({
                         query: GET_NOTES,
-                        data: { getNotes: updatedNotes}
+                        data: { getNotes: updatedNotes},
+                        variables: {
+                            userId: updateNote.note.userId
+                        }
                     })
 
                 }

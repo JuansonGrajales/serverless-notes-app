@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CreateNote from './createnote';
 import Note from './note';
 import './notes.css';
