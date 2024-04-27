@@ -10,8 +10,12 @@ const server = new ApolloServer({
 });
 
 exports.graphqlHandler = server.createHandler({
-    cors: {
-        origin: '*',
-        credentials: true,
-    },
+    expressGetMiddlewareOptions: {
+        cors: {
+          origin: '*',
+          credentials: true,
+          allowedHeaders: ['Content-Type', 'Authorization'],
+          methods: ['GET', 'POST']
+        }
+      },
 });
