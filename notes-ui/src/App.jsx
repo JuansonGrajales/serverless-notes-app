@@ -1,21 +1,39 @@
 import './App.css';
+import '@aws-amplify/ui-react/styles.css';
 import Header from './components/header';
 import Search from './components/search';
 import Notes from './components/notes';
-import { useState } from 'react';
-import { useNotes, GET_NOTES } from './hooks/useNotes';
-import { withAuthenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
-import { Amplify } from 'aws-amplify';
 import config from './amplifyconfiguration.json';
+import { Amplify } from 'aws-amplify';
+import { createContext, useEffect, useState } from 'react';
+import { useNotes } from './hooks/useNotes';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import { getCurrentUser } from 'aws-amplify/auth';
+
 Amplify.configure(config);
+export const AuthContext = createContext(undefined);
 
 function App() {
   const [searchText, setSearchText] = useState("");
   const [editingNoteId, setEditingNoteId] = useState(null);
-  const [inputText, setInputText] = useState("");  
-  const { notes, loading, error } = useNotes(GET_NOTES);
-  
+  const [inputText, setInputText] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);  
+  const { setUserId, getNotes, notes, loading, error } = useNotes();
+
+  // Fetch current autehnticated user on component mount
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await getCurrentUser();
+        setCurrentUser(user);
+        setUserId(user.userId);
+      } catch (err) {
+        console.error('Error fetching user: ', err);
+      }
+    };
+    fetchUser();
+  }, []);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>
 
@@ -36,17 +54,19 @@ function App() {
   }
 
   return (
-    <div className='main'>
-      <Header/>
-      <Search searchHandler={searchHandler}/>
-      <Notes 
-        notes={notes}
-        inputText={inputText}
-        inputTextHandler={inputTextHandler} 
-        editingNoteId={editingNoteId}
-        editHandler={editHandler}
-        searchText={searchText}/>
-    </div>
+    <AuthContext.Provider value={currentUser}>
+      <div className='main'>
+        <Header/>
+        <Search searchHandler={searchHandler}/>
+        <Notes 
+          notes={notes}
+          inputText={inputText}
+          inputTextHandler={inputTextHandler} 
+          editingNoteId={editingNoteId}
+          editHandler={editHandler}
+          searchText={searchText}/>
+      </div>
+    </AuthContext.Provider>
   );
 }
 

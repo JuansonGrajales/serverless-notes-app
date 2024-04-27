@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { MAX_CHAR_LIMIT, MIN_CHAR_LIMIT } from "../constants";
 import { useCreateNote } from "../hooks/useCreateNote";
 import { useUpdateNote } from "../hooks/useUpdateNote";
+import { AuthContext } from "../App";
 
 const CreateNote = ({inputText, inputTextHandler, editHandler, id}) => {
     const { createNote, loading, error } = useCreateNote();
     const { updateNote, updateloading, updateError } = useUpdateNote();
     const charCount = MAX_CHAR_LIMIT - inputText?.length;
-    
+    const currentUser = useContext(AuthContext);
+
     const saveHandler = async () => {
         if (!inputText.trim() || inputText.length < MIN_CHAR_LIMIT) {
             alert("Please enter a valid note with more than 20 characters.")
@@ -18,7 +20,7 @@ const CreateNote = ({inputText, inputTextHandler, editHandler, id}) => {
                 await updateNote(id, inputText);
                 editHandler(null);
             } else { // create new note
-                await createNote(inputText);
+                await createNote(inputText, currentUser.userId);
             }
             // Reset inputText for edit and create
             inputTextHandler('');
@@ -44,7 +46,9 @@ const CreateNote = ({inputText, inputTextHandler, editHandler, id}) => {
             <button className="note_button" onClick={saveHandler}>Save</button>
         </div>
         {loading && <p>Saving...</p>}
+        {updateloading && <p>Updating...</p>}
         {error && <p>Error saving note: {error.message}</p>}
+        {updateError && <p>Error updating note: {updateError.message}</p>}
     </div>
   );
 }

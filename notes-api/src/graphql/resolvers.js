@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const TABLE_NAME = 'NotesTable';
+const USER_ID_INDEX = 'UserIdIndex';
 
 const resolvers = {
   Query: {
@@ -19,39 +20,33 @@ const resolvers = {
         throw new Error(error);
       }
     },
-    getNotes: async () => {
+    getNotes: async (_, {userId} ) => {
+      // Ensure userId is provided
+      if (!userId) {
+        throw new Error("userId is required to fetch notes.");
+      }
       const params = {
         TableName: TABLE_NAME,
-      };
-      try {
-        const { Items } = await dynamoDb.scan(params).promise();
-        return Items;
-      } catch (error) {
-        throw new Error(error);
-      } 
-    },
-    searchNotes: async (_, { searchContent }) => {
-      const params = {
-        TableName: TABLE_NAME,
-        FilterExpression: 'contains(content_search, :searchContent)',
+        IndexName: USER_ID_INDEX,
+        KeyConditionExpression: "userId = :userId",
         ExpressionAttributeValues: {
-          ':searchContent': searchContent.toLowerCase(),
+          ":userId": userId
         },
       };
       try {
-        const { Items } = await dynamoDb.scan(params).promise();
+        const { Items } = await dynamoDb.query(params).promise();
         return Items;
       } catch (error) {
-        throw new Error("Failed to search notes");
-      }
+        throw new Error(`Error fetching notes: ${error.message}`);
+      } 
     },
   },
   Mutation: {
-    createNote: async (_, { content }) => {
+    createNote: async (_, { content, userId }) => {
       const newNote = {
         id: uuidv4(),
+        userId,
         content,
-        content_search: content.toLowerCase(),
         createdAt: new Date().toISOString(),
       };
       const params = {
@@ -69,10 +64,9 @@ const resolvers = {
       const params = {
         TableName: TABLE_NAME,
         Key: { id },
-        UpdateExpression: 'set content = :content, content_search = :content_search',
+        UpdateExpression: 'set content = :content',
         ExpressionAttributeValues: {
           ':content': content,
-          ':content_search': content.toLowerCase(),
         },
         ReturnValues: 'ALL_NEW', // Return the updated note
       };
@@ -81,7 +75,7 @@ const resolvers = {
         const updatedNote = result.Attributes ? {
           id: result.Attributes.id,
           content: result.Attributes.content,
-          content_search: result.Attributes.content_search,
+          userId: result.Attributes.userId,
           createdAt: result.Attributes.createdAt,
         } : null;
 
