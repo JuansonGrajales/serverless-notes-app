@@ -9,11 +9,13 @@ import { createContext, useEffect, useState } from 'react';
 import { useNotes } from './hooks/useNotes';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import { getCurrentUser } from 'aws-amplify/auth';
+import Loading from './components/loading';
 
 Amplify.configure(config);
 export const AuthContext = createContext(undefined);
 
 function App() {
+  const [initalLoading, setInitialLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [editingNoteId, setEditingNoteId] = useState(null);
   const [inputText, setInputText] = useState("");
@@ -27,15 +29,13 @@ function App() {
         const user = await getCurrentUser();
         setCurrentUser(user);
         setUserId(user.userId);
+        setInitialLoading(false);
       } catch (err) {
         console.error('Error fetching user: ', err);
       }
     };
     fetchUser();
   }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>
 
   // edit note
   const editHandler = (id, text) => {
@@ -53,6 +53,11 @@ function App() {
     setSearchText(text);
   }
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>
+  if (initalLoading) {
+    return <Loading/>
+  }
   return (
     <AuthContext.Provider value={currentUser}>
       <div className='main'>
