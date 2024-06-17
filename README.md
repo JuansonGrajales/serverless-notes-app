@@ -1,5 +1,5 @@
 # Serverless Notes App
-
+![design](./assets/ServerlessNotesDesign.jpg)
 ## Description
 The Serverless Notes App is a dynamic application built with React and AWS serverless technologies, designed for note-taking with functionalities to create, read, update, and delete notes. It leverages AWS Lambda, API Gateway, and DynamoDB for backend logic, and AWS S3 and CloudFront for content hosting and delivery.
 
